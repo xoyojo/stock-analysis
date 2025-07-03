@@ -32,7 +32,7 @@ starttime = time.time()
 
 # 常量定义
 TDX_PATH = Path(ucfg.tdx["tdx_path"])
-CW_PATH = TDX_PATH / "vipdoc/cw"
+TDX_CW_PATH = TDX_PATH / "vipdoc/cw"
 CSV_CW_PATH = Path(ucfg.tdx["csv_cw"])
 CSV_GBBQ_PATH = Path(ucfg.tdx["csv_gbbq"])
 
@@ -63,22 +63,14 @@ for df_filename in tdx_gpcw_df["filename"].tolist():
     if df_filename not in local_zipfile_list:
         print(f"{df_filename} 本机没有 开始下载")
         tdx_zipfile_url = "http://down.tdx.com.cn:8001/tdxfin/" + df_filename
-        local_zipfile_path = (
-            ucfg.tdx["tdx_path"]
-            + os.sep
-            + "vipdoc"
-            + os.sep
-            + "cw"
-            + os.sep
-            + df_filename
-        )
+        local_zipfile_path = TDX_CW_PATH / df_filename
         many_thread_download.run(tdx_zipfile_url, local_zipfile_path)
         with zipfile.ZipFile(
             local_zipfile_path, "r"
         ) as zipobj:  # 打开zip对象，释放zip文件。会自动覆盖原文件。
-            zipobj.extractall(ucfg.tdx["tdx_path"] + os.sep + "vipdoc" + os.sep + "cw")
-        local_datfile_path = local_zipfile_path[:-4] + ".dat"
-        df = func.historyfinancialreader(local_datfile_path)
+            zipobj.extractall(TDX_CW_PATH)
+        # local_datfile_path =
+        df = func.historyfinancialreader(str(local_zipfile_path)[:-4] + ".dat")
         csvpath = ucfg.tdx["csv_cw"] + os.sep + df_filename[:-4] + ".pkl"
         df.to_pickle(csvpath, compression=None)
         print(f"{df_filename} 完成更新 用时 {(time.time() - starttime_tick):>5.2f} 秒")
