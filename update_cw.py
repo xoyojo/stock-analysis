@@ -118,21 +118,21 @@ for zipfile_filename in local_zipfile_list:
         )
 
 # 检查本机财报导出文件是否存在
-cwfile_list = os.listdir(ucfg.tdx["csv_cw"])  # cw目录 生成文件名列表
-local_datfile_list = func.list_localTDX_cwfile("dat")  # 获取本机已有文件
-for filename in local_datfile_list:
-    starttime_tick = time.time()
-    filenamepkl = filename[:-4] + ".pkl"
-    pklpath = ucfg.tdx["csv_cw"] + os.sep + filenamepkl
-    filenamedat = filename[:-4] + ".dat"
-    datpath = (
-        ucfg.tdx["tdx_path"] + os.sep + "vipdoc" + os.sep + "cw" + os.sep + filenamedat
-    )
-    if filenamepkl not in cwfile_list:  # 本机zip文件的md5与服务器端不一致
-        print(f"{filename} 本机没有 需要导出")
-        df = func.historyfinancialreader(datpath)
-        df.to_pickle(pklpath, compression=None)
-        print(f"{filename} 完成更新 用时 {(time.time() - starttime_tick):>5.2f} 秒")
+# cwfile_list = os.listdir(ucfg.tdx["csv_cw"])  # cw目录 生成文件名列表
+# local_datfile_list = func.list_localTDX_cwfile("dat")  # 获取本机已有文件
+# for filename in local_datfile_list:
+#     starttime_tick = time.time()
+#     filenamepkl = filename[:-4] + ".pkl"
+#     pklpath = ucfg.tdx["csv_cw"] + os.sep + filenamepkl
+#     filenamedat = filename[:-4] + ".dat"
+#     datpath = (
+#         ucfg.tdx["tdx_path"] + os.sep + "vipdoc" + os.sep + "cw" + os.sep + filenamedat
+#     )
+#     if filenamepkl not in cwfile_list:  # 本机zip文件的md5与服务器端不一致
+#         print(f"{filename} 本机没有 需要导出")
+#         df = func.historyfinancialreader(datpath)
+#         df.to_pickle(pklpath, compression=None)
+#         print(f"{filename} 完成更新 用时 {(time.time() - starttime_tick):>5.2f} 秒")
 
 print(f"专业财务文件检查更新完成 已用 {(time.time() - starttime):>5.2f} 秒")
 
